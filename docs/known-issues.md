@@ -24,7 +24,7 @@ Playwright suite, CI `quality` + `test` jobs.
 ### Symptoms
 
 - `?` appears next to buttons where an arrow was intended (should be U+2197 NE ARROW).
-- Garbled sequences like `"` instead of an em dash, or wrong punctuation in tags.
+- Garbled sequences like `?"` instead of an em dash, or wrong punctuation in tags.
 - `U+FFFD` replacement character in rendered HTML or source files.
 - `check:encoding` or `tests/content.spec.ts` fails.
 
@@ -34,7 +34,7 @@ On this Windows dev environment, some editor/agent file-write tools silently
 re-encode UTF-8 source as Windows-1252/Latin-1. When those bytes are later read
 as UTF-8, glyphs corrupt or become literal `?`.
 
-The Read tool in the IDE can _display_ valid UTF-8 em dashes as `"` even when
+The Read tool in the IDE can _display_ valid UTF-8 em dashes as `?"` even when
 on-disk bytes are correct (`e2 80 94`). Always verify with:
 
 ```bash
@@ -52,7 +52,7 @@ node -e "const fs=require('fs');const b=fs.readFileSync('PATH');console.log([...
 
 ### Secondary bug during repair
 
-A one-off `repair.mjs` script incorrectly converted middots (``) to em dashes
+A one-off `repair.mjs` script incorrectly converted middots (`?`) to em dashes
 in `store.astro` product tags. Fixed with a targeted `fixmid.mjs` pass. Lesson:
 repair scripts need assertions per glyph, not blind substitution.
 
@@ -208,3 +208,9 @@ normalize replacement strings.
 - **Symptom:** Rules in `html-validate.config.json` ignored; strict false positives.
 - **Cause:** html-validate v11 reads `.htmlvalidate.json`, not the hyphenated name.
 - **Fix:** Config lives at `.htmlvalidate.json`; `npm run validate:html` uses it.
+
+### html-validate v11 requires Node 22.22+
+
+- **Symptom:** CI `Validate HTML` fails with `TypeError: fs.globSync is not a function`.
+- **Cause:** html-validate 11.x uses the Node native `fs.globSync` API (added in Node 22). CI was on Node 20 via `.nvmrc`; local dev on Node 22 masked the mismatch.
+- **Fix:** `.nvmrc` and `engines.node` set to `>=22.22.0 <23`. Re-run `npm run build && npm run validate:html` after switching Node versions.

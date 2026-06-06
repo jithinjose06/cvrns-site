@@ -42,7 +42,7 @@ npm run suggest-prompts # suggest agent prompts for current diff
 - **Dependabot** (`.github/dependabot.yml`) and **PR template** keep deps and
   review checklists on track. See [`docs/github-setup.md`](docs/github-setup.md)
   for branch protection and secret scanning after first push.
-- **Node 20** pinned via `.nvmrc` and `package.json` `engines`.
+- **Node 22** pinned via `.nvmrc` and `package.json` `engines` (required by `html-validate` v11).
 - **Pre-commit hook** (husky + lint-staged) auto-runs eslint `--fix`, prettier
   `--write`, and the encoding guard on staged files. CI re-runs all of these in
   the `quality` job so nothing slips through if a hook is bypassed.
