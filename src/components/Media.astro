@@ -1,0 +1,22 @@
+---
+/**
+ * Production replacement for the design-time <image-slot> web component.
+ * Renders a real, responsive <img>. Drop final photography into
+ * /public/images/ and pass its path as `src`.
+ *
+ * TODO: replace the shared placeholder with real photography per slot.
+ */
+interface Props {
+  src?: string;
+  alt: string;
+  label?: string;
+  eager?: boolean;
+}
+
+const { src = '/images/placeholder.svg', alt, label, eager = false } = Astro.props;
+---
+
+<div class="media">
+  <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  {label && <span class="media__tag">{label}</span>}
+</div>

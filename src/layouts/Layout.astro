@@ -1,0 +1,109 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/site.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  page: 'home' | 'music' | 'store';
+}
+
+const {
+  title,
+  description = 'CVRNS — alternative rock / melodic metalcore. Debut EP HERE.AFTER (2025).',
+  page,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/images/cvrns-logo.png" />
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* Load fonts without blocking render: swap media to 'all' once fetched. */}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+  </head>
+  <body data-page={page}>
+    <Nav page={page} cart={page === 'store'} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer variant={page} />
+
+    <script>
+      // CVRNS — global interactions: scroll reveal, mobile drawer, newsletter.
+      import { createOverlay } from '../scripts/focus';
+
+      // ---------- scroll reveal ----------
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // ---------- mobile drawer ----------
+      const burger = document.querySelector('.nav__burger');
+      const drawer = document.querySelector<HTMLElement>('.drawer');
+      if (burger && drawer) {
+        const close = drawer.querySelector('.drawer__close');
+        const drawerOverlay = createOverlay({
+          container: drawer,
+          onOpen: () => {
+            drawer.classList.add('open');
+            document.body.style.overflow = 'hidden';
+          },
+          onClose: () => {
+            drawer.classList.remove('open');
+            document.body.style.overflow = '';
+          },
+          initialFocus: () => close as HTMLElement | null,
+        });
+        const shut = () => drawerOverlay.close();
+        burger.addEventListener('click', () => drawerOverlay.open(burger as HTMLElement));
+        close?.addEventListener('click', shut);
+        drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', shut));
+        // close the drawer when its Cart button is tapped (the cart panel,
+        // wired in the store script, opens on top via the shared .nav__cart hook)
+        drawer.querySelector('.drawer__cart')?.addEventListener('click', shut);
+      }
+
+      // ---------- newsletter (mock) ----------
+      const form = document.querySelector<HTMLFormElement>('.signup form');
+      if (form) {
+        form.addEventListener('submit', (ev) => {
+          ev.preventDefault();
+          // TODO: connect to Mailchimp/Klaviyo/Beehiiv.
+          // No fake success message in production — wire to a real provider.
+          console.warn('Newsletter signup not yet connected to a provider.');
+        });
+      }
+    </script>
+  </body>
+</html>

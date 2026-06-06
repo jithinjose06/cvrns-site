@@ -1,0 +1,67 @@
+---
+import { spotifyAlbumUrl } from '../data/spotify';
+
+interface Props {
+  variant?: 'home' | 'music' | 'store';
+}
+
+const { variant = 'home' } = Astro.props;
+
+/* TODO: replace placeholder '#' hrefs with real Apple Music / Bandcamp /
+   YouTube / social / store-policy URLs. */
+const SPOTIFY_URL = spotifyAlbumUrl();
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="/images/cvrns-logo.png" alt="CVRNS" />
+        <p>CVRNS — alternative rock. Currently somewhere on the road.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h2>Explore</h2>
+          <a href="/">Home</a>
+          <a href="/music">Music</a>
+          <a href="/store">Store</a>
+        </div>
+
+        {
+          variant === 'store' ? (
+            <div class="footer__col">
+              <h2>Store</h2>
+              <a href="#">Shipping</a>
+              <a href="#">Returns</a>
+              <a href="#">Sizing</a>
+            </div>
+          ) : (
+            <div class="footer__col">
+              <h2>Listen</h2>
+              <a href={SPOTIFY_URL} target="_blank" rel="noopener">
+                Spotify
+              </a>
+              <a href="#">Apple Music</a>
+              <a href="#">Bandcamp</a>
+              {variant === 'home' && <a href="#">YouTube</a>}
+            </div>
+          )
+        }
+
+        <div class="footer__col">
+          <h2>Follow</h2>
+          <a href="#">Instagram</a>
+          <a href="#">TikTok</a>
+          {variant === 'home' ? <a href="#">X / Twitter</a> : <a href="#">YouTube</a>}
+          {variant === 'home' && <a href="#">Discord</a>}
+        </div>
+      </div>
+    </div>
+    <div class="footer__giant" aria-hidden="true"></div>
+    <div class="footer__bottom">
+      <span>© 2026 CVRNS</span>
+      <span>Booking · Management · Press</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</footer>

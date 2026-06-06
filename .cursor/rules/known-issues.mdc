@@ -1,0 +1,22 @@
+---
+description: Debugging history and known pitfalls for the CVRNS site
+alwaysApply: false
+---
+
+# Known issues
+
+When investigating a regression, flaky test, encoding problem, or tooling failure,
+**read `docs/known-issues.md` first** before guessing.
+
+High-priority recurring traps:
+
+1. **UTF-8 mojibake on Windows** -- agent/editor writes can corrupt glyphs in
+   `.astro` and `site.css`. Verify bytes on disk; use Node utf8 or Prettier;
+   run `npm run check:encoding`.
+2. **Playwright connection refused / WebKit + Norton** -- often environmental,
+   not app bugs. See section 2 in the log.
+3. **Prettier + `{` in HTML comments** -- use `{/* */}` in Astro, not `<!-- { -->`.
+4. **lint-staged needs Git >= 2.32** unless pinned to 13.x (this project).
+
+Do not duplicate long troubleshooting prose here; keep the log in `docs/known-issues.md`
+up to date when a new class of bug is found and fixed.

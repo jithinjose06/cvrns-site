@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Media from '../components/Media.astro';
+import SpotifyEmbed from '../components/SpotifyEmbed.astro';
+import { spotifyAlbumUrl } from '../data/spotify';
+---
+
+<Layout title="CVRNS — Music" page="music">
+  <!-- PAGE HEAD -->
+  <header class="page-head wrap">
+    <span class="kicker reveal">Debut EP · 2025</span>
+    <h1 class="reveal" data-d="1">Music</h1>
+    <p class="sub reveal" data-d="2">
+      One record, made to be played front to back. This is HERE.AFTER.
+    </p>
+  </header>
+
+  <div class="wrap">
+    <!-- FEATURED EP — with Spotify embed -->
+    <section class="album" style="border-top:none;">
+      <div class="album__art reveal">
+        <!-- TODO: drop HERE.AFTER cover art in /public/images/m-art-1.jpg -->
+        <Media alt="HERE.AFTER album artwork" label="Drop HERE.AFTER artwork" />
+      </div>
+      <div class="album__body reveal" data-d="1">
+        <span class="kicker no-rule">Debut EP</span>
+        <h2 class="album__title">HERE . AFTER</h2>
+        <div class="album__meta">
+          <span>EP</span><span>2025</span><span>CVRNS</span>
+        </div>
+        <p class="serifless-lead muted">Made to be played front to back.</p>
+        <SpotifyEmbed />
+        <div class="actions">
+          <!-- TODO: replace # with real Apple Music / Bandcamp URLs -->
+          <a class="btn btn--solid" href="#">Apple Music <span class="ar">↗</span></a>
+          <a class="btn" href="#">Bandcamp <span class="ar">↗</span></a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- STREAMING STATEMENT -->
+  <section class="section statement wrap">
+    <p class="reveal">Hear it<br />everywhere</p>
+    <div class="stream-row reveal" data-d="1">
+      <a class="btn btn--lg" href={spotifyAlbumUrl()} target="_blank" rel="noopener"
+        >Spotify <span class="ar">↗</span></a
+      >
+      <!-- TODO: replace # with real Apple Music / Bandcamp / YouTube URLs -->
+      <a class="btn btn--lg" href="#">Apple Music <span class="ar">↗</span></a>
+      <a class="btn btn--lg" href="#">Bandcamp <span class="ar">↗</span></a>
+      <a class="btn btn--lg" href="#">YouTube <span class="ar">↗</span></a>
+    </div>
+  </section>
+</Layout>

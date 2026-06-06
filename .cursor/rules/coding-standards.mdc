@@ -1,0 +1,76 @@
+---
+description: CVRNS site coding standards and known pitfalls
+alwaysApply: true
+---
+
+# CVRNS coding standards
+
+Run `npm run lint`, `npm run format`, and `npm run typecheck` before declaring work done.
+Prettier owns formatting and ESLint owns correctness -- do not hand-format.
+
+For debugging regressions, read `docs/known-issues.md` first.
+
+## Encoding (critical)
+- All source is UTF-8 with LF line endings. Decorative glyphs (em dash, middot,
+  NE arrow) are real UTF-8 bytes (em-dash = `e2 80 94`), not HTML entities.
+- Editing tools may silently re-encode non-ASCII as Windows-1252. When changing a
+  file that contains such glyphs (`.astro` pages/layout/footer, `site.css`), edit
+  via a Node `fs` utf8 read/replace/write or `prettier --write`, then run
+  `npm run check:encoding`. Never let literal `?` or `\uFFFD` reach disk.
+- Keep `.cursor/rules/*.mdc` ASCII-only to avoid rule-file corruption.
+
+## DRY / structure
+- No duplicated literals across files. Hoist shared values to a module
+  (e.g. `src/data/spotify.ts`) or a component (e.g. `src/components/SpotifyEmbed.astro`).
+- Repeated markup -> Astro component. Repeated test setup -> `tests/helpers.ts`.
+
+## Tests
+- If you change **interactive** behavior (cart, drawer, filters, forms, keyboard
+  flow), add or update Playwright coverage in the same session (`tests/*.spec.ts`).
+- UI-only CSS tweaks may rely on smoke/visual tests unless layout semantics change.
+
+## DOM / JS
+- Prefer one delegated listener over re-binding handlers on every render.
+  Carry identity in `data-*` (e.g. `row.dataset.key`) and resolve via `closest()`.
+- Use `el.dataset.x` rather than `setAttribute('data-x', ...)`.
+- Never swallow errors with empty `catch {}` -- at minimum `console.warn`.
+
+## Accessibility
+- Keep one `<main>`, correct heading order, and labelled controls.
+- Overlays use the shared `src/scripts/focus.ts` (focus move-in, trap, restore).
+
+## When done
+- Run `npm run lint`, `npm run format:check`, `npm run typecheck`,
+  `npm run check:encoding`, `npm run build`, and `npm run validate:dist` before
+  declaring work complete (when source or markup changed).
+- If you fixed a **novel** bug, flake, or tooling pitfall (not a one-off typo),
+  append a short entry to `docs/known-issues.md` (symptom, cause, fix) before
+  finishing. Update the symptom index if it is a new class of problem.
+
+## Suggest prompts (proactive)
+When the user wraps up, asks what is next, mentions push/commit/PR, or you finish
+a meaningful task:
+1. Assess the session (bugs fixed, UI/copy/tooling touched, tests added).
+2. Run `npm run suggest-prompts` when git has local changes.
+3. Suggest only the **minimal** applicable prompts from `docs/agent-prompts.md`,
+   with one-line reasons each. Offer to run them -- do not dump the full list.
+4. Skip prompts for checks that already ran successfully in this session unless
+   the user is about to push.
+
+## Manual GitHub steps (contextual reminder)
+Automation cannot set branch protection or secret scanning. **Remind the user
+when context calls for it** -- do not wait for them to remember `github-setup.md`.
+
+**Trigger reminders when the user mentions:** commit, push, PR, GitHub, remote,
+deploy, "what's next", or finishing a large milestone.
+
+**How to assess:** run `npm run remind:manual` (or read git state):
+- `git rev-list --count HEAD` -- 0 means baseline commit needed first.
+- `git remote` empty -- add origin before push.
+- branch has no upstream -- first `git push -u` needed.
+- remote exists -- one-time browser steps: branch protection, secret scanning,
+  Dependabot alerts (`docs/github-setup.md` sections 2-4).
+
+**Format:** short bullet list under a "Manual steps" heading; link `docs/github-setup.md`.
+If the user confirms a step is done, do not repeat it in the same conversation
+unless they start a new push/deploy thread.

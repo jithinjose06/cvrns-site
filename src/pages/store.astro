@@ -1,0 +1,351 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Media from '../components/Media.astro';
+
+interface Product {
+  id: string;
+  name: string;
+  nameHtml?: string;
+  price: number;
+  cat: 'pressings' | 'apparel' | 'prints';
+  tag: string;
+  desc: string;
+  cls: string;
+  d?: string;
+}
+
+const products: Product[] = [
+  {
+    id: 'vinyl',
+    name: 'HERE.AFTER LP',
+    nameHtml: 'HERE.AFTER<br/>LP',
+    price: 32,
+    cat: 'pressings',
+    tag: 'Vinyl · Ltd 300',
+    desc: '180g black vinyl. Gatefold sleeve, hand-numbered. Includes digital download.',
+    cls: 'product--lg',
+  },
+  {
+    id: 'tee',
+    name: 'Tour Tee',
+    price: 35,
+    cat: 'apparel',
+    tag: 'Apparel',
+    desc: 'Heavyweight cotton. Front mark, back tour print.',
+    cls: 'product--sm product--push',
+    d: '1',
+  },
+  {
+    id: 'hoodie',
+    name: 'Heavyweight Hoodie',
+    price: 70,
+    cat: 'apparel',
+    tag: 'Apparel',
+    desc: '450gsm brushed fleece, oversized fit, embroidered mark.',
+    cls: 'product--half',
+  },
+  {
+    id: 'poster',
+    name: 'Tour Poster',
+    price: 25,
+    cat: 'prints',
+    tag: 'Print · Ltd 300',
+    desc: 'A1 screen print. Numbered and signed by the band.',
+    cls: 'product--half',
+    d: '1',
+  },
+  {
+    id: 'cap',
+    name: 'Embroidered Cap',
+    price: 30,
+    cat: 'apparel',
+    tag: 'Apparel',
+    desc: 'Unstructured 6-panel, tonal stitch.',
+    cls: 'product--sm product--push',
+  },
+  {
+    id: 'long',
+    name: 'Long Sleeve',
+    price: 45,
+    cat: 'apparel',
+    tag: 'Apparel',
+    desc: 'Full-sleeve print. Lyrics from "Undertow" down the left arm.',
+    cls: 'product--lg',
+    d: '1',
+  },
+];
+---
+
+<Layout title="CVRNS — Store" page="store">
+  <!-- HEAD -->
+  <header class="page-head wrap">
+    <span class="kicker reveal">Official Store · Ships Worldwide</span>
+    <h1 class="reveal" data-d="1">Store</h1>
+    <p class="sub reveal" data-d="2">
+      A limited run of garments and pressings made alongside HERE.AFTER. Screen-printed by hand.
+      Numbered editions.
+    </p>
+  </header>
+
+  <!-- PRODUCTS -->
+  <section class="wrap">
+    <div class="store-filter" role="group" aria-label="Filter products by category">
+      <button type="button" class="store-filter__btn is-active" data-cat="all" aria-pressed="true"
+        >All</button
+      >
+      <button type="button" class="store-filter__btn" data-cat="pressings" aria-pressed="false"
+        >Pressings</button
+      >
+      <button type="button" class="store-filter__btn" data-cat="apparel" aria-pressed="false"
+        >Apparel</button
+      >
+      <button type="button" class="store-filter__btn" data-cat="prints" aria-pressed="false"
+        >Prints</button
+      >
+    </div>
+    <div class="store-grid">
+      {
+        products.map((p) => (
+          <article class={`product ${p.cls} reveal`} data-d={p.d} data-cat={p.cat}>
+            <div class="product__media">
+              <span class="product__tag">{p.tag}</span>
+              {/* TODO: drop product shot in /public/images/p-<id>.jpg */}
+              <Media alt={p.name} />
+            </div>
+            <div class="product__row">
+              <div>
+                <h2 class="product__name" set:html={p.nameHtml ?? p.name} />
+                <p class="product__desc">{p.desc}</p>
+              </div>
+              <span class="product__price">${p.price}</span>
+            </div>
+            <button
+              type="button"
+              class="product__add"
+              data-id={p.id}
+              data-name={p.name}
+              data-price={p.price}
+            >
+              Add to Cart
+            </button>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- CART DRAWER -->
+  <div class="cart" role="region" aria-label="Shopping cart">
+    <div class="cart__scrim"></div>
+    <aside class="cart__panel">
+      <div class="cart__head">
+        <h2>Cart</h2>
+        <div class="cart__head-actions">
+          <button type="button" class="cart__clear" data-confirm="false" aria-live="polite" hidden
+            >Clear</button
+          >
+          <button type="button" class="cart__close">Close</button>
+        </div>
+      </div>
+      <div class="cart__items"></div>
+      <div class="cart__foot">
+        <div class="cart__total"><span>Subtotal</span><b>$0</b></div>
+        <button type="button" class="btn btn--solid cart__checkout"
+          >Checkout <span class="ar">↗</span></button
+        >
+        <p class="cart__note">Shipping &amp; taxes calculated at checkout</p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // CVRNS store — cart logic, persisted to localStorage.
+    // The cart UI is production-ready; only the checkout/data layer is mocked.
+    import { createOverlay } from '../scripts/focus';
+
+    type Line = { name: string; price: number; qty: number };
+
+    const KEY = 'cvrns_cart';
+    let cart: Record<string, Line> = {};
+    try {
+      cart = JSON.parse(localStorage.getItem(KEY) || '{}') || {};
+    } catch {
+      cart = {};
+    }
+
+    const save = () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(cart));
+      } catch {
+        console.warn('Cart could not be saved (storage unavailable).');
+      }
+    };
+    const money = (n: number) => '$' + n.toFixed(0);
+
+    const drawer = document.querySelector('.cart')!;
+    const itemsEl = drawer.querySelector('.cart__items')!;
+    const totalEl = drawer.querySelector('.cart__total b')!;
+    const countEls = document.querySelectorAll<HTMLElement>('.nav__cart .count');
+    const clearBtn = drawer.querySelector<HTMLButtonElement>('.cart__clear')!;
+
+    // Two-step clear: the first tap arms the button ("Tap again to confirm")
+    // and the second tap empties the cart. Nothing is destroyed until the
+    // confirm tap, so there's no undo window to leak across reloads/tabs.
+    let clearTimer: ReturnType<typeof setTimeout> | undefined;
+    const disarmClear = () => {
+      clearTimeout(clearTimer);
+      clearBtn.dataset.confirm = 'false';
+      clearBtn.textContent = 'Clear';
+    };
+
+    const totalCount = () => Object.keys(cart).reduce((s, k) => s + cart[k].qty, 0);
+    const totalPrice = () => Object.keys(cart).reduce((s, k) => s + cart[k].qty * cart[k].price, 0);
+
+    function render() {
+      const c = totalCount();
+      countEls.forEach((el) => {
+        el.textContent = String(c);
+        el.dataset.empty = String(c === 0);
+      });
+
+      // Clear is only meaningful with items present; reset its armed state
+      // whenever the cart contents change.
+      clearBtn.hidden = c === 0;
+      disarmClear();
+
+      itemsEl.innerHTML = '';
+      const keys = Object.keys(cart);
+      if (!keys.length) {
+        const empty = document.createElement('p');
+        empty.className = 'cart__empty';
+        empty.textContent = 'Your cart is empty.';
+        itemsEl.appendChild(empty);
+      } else {
+        keys.forEach((k) => {
+          const it = cart[k];
+          const row = document.createElement('div');
+          row.className = 'cart-item';
+          row.innerHTML =
+            '<div class="cart-item__name"></div>' +
+            '<div class="cart-item__price"></div>' +
+            '<div class="cart-item__qty"><button type="button" data-act="dec">\u2212</button><span></span><button type="button" data-act="inc">+</button></div>' +
+            '<button type="button" class="cart-item__remove" data-act="rm">Remove</button>';
+          row.querySelector('.cart-item__name')!.textContent = it.name;
+          row.querySelector('.cart-item__price')!.textContent = money(it.price * it.qty);
+          row.querySelector('.cart-item__qty span')!.textContent = String(it.qty);
+          row.dataset.key = k;
+          itemsEl.appendChild(row);
+        });
+      }
+      totalEl.textContent = money(totalPrice());
+    }
+
+    // One delegated handler for every quantity / remove button. Rows carry
+    // data-key so we never rebind listeners on each render.
+    itemsEl.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-act]');
+      if (!btn || !itemsEl.contains(btn)) return;
+      const k = btn.closest<HTMLElement>('.cart-item')?.dataset.key;
+      if (!k || !cart[k]) return;
+      const act = btn.dataset.act;
+      if (act === 'inc') cart[k].qty++;
+      else if (act === 'dec') {
+        cart[k].qty--;
+        if (cart[k].qty <= 0) delete cart[k];
+      } else if (act === 'rm') delete cart[k];
+      save();
+      render();
+    });
+
+    const cartPanel = drawer.querySelector<HTMLElement>('.cart__panel')!;
+    const cartOverlay = createOverlay({
+      container: cartPanel,
+      onOpen: () => {
+        drawer.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      },
+      onClose: () => {
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+        disarmClear();
+      },
+      initialFocus: () => drawer.querySelector<HTMLElement>('.cart__close'),
+    });
+    const openCart = (trigger?: HTMLElement | null) => cartOverlay.open(trigger);
+    const closeCart = () => cartOverlay.close();
+
+    document.querySelectorAll<HTMLButtonElement>('.product__add').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id!;
+        const name = btn.dataset.name!;
+        const price = parseFloat(btn.dataset.price!);
+        if (!cart[id]) cart[id] = { name, price, qty: 0 };
+        cart[id].qty++;
+        save();
+        render();
+        btn.classList.add('added');
+        const orig = btn.textContent;
+        btn.textContent = 'Added';
+        setTimeout(() => {
+          btn.classList.remove('added');
+          btn.textContent = orig;
+        }, 1100);
+        openCart(btn);
+      });
+    });
+
+    document
+      .querySelectorAll<HTMLElement>('.nav__cart')
+      .forEach((b) => b.addEventListener('click', () => openCart(b)));
+    drawer.querySelector('.cart__close')!.addEventListener('click', closeCart);
+    drawer.querySelector('.cart__scrim')!.addEventListener('click', closeCart);
+
+    clearBtn.addEventListener('click', () => {
+      if (clearBtn.dataset.confirm !== 'true') {
+        clearBtn.dataset.confirm = 'true';
+        clearBtn.textContent = 'Tap again to confirm';
+        clearTimer = setTimeout(disarmClear, 3000);
+        return;
+      }
+      cart = {};
+      save();
+      // clearBtn hides on the empty render, so move focus to a stable control
+      drawer.querySelector<HTMLElement>('.cart__close')!.focus();
+      render();
+    });
+
+    const checkout = drawer.querySelector('.cart__checkout');
+    checkout?.addEventListener('click', () => {
+      if (!totalCount()) return;
+      // TODO: wire to Shopify Storefront API or Stripe Checkout.
+      const foot = drawer.querySelector('.cart__foot')!;
+      foot.innerHTML =
+        '<p class="cart__empty" style="text-align:center;margin:0">Checkout is connected at launch.</p>';
+    });
+
+    // category filter
+    const filterBtns = document.querySelectorAll<HTMLButtonElement>('.store-filter__btn');
+    const productEls = document.querySelectorAll<HTMLElement>('.product');
+    filterBtns.forEach((b) => {
+      b.addEventListener('click', () => {
+        filterBtns.forEach((x) => {
+          x.classList.remove('is-active');
+          x.setAttribute('aria-pressed', 'false');
+        });
+        b.classList.add('is-active');
+        b.setAttribute('aria-pressed', 'true');
+        const cat = b.dataset.cat;
+        productEls.forEach((p) => {
+          const show = cat === 'all' || p.dataset.cat === cat;
+          p.hidden = !show;
+          if (show) {
+            p.classList.remove('in');
+            requestAnimationFrame(() => p.classList.add('in'));
+          }
+        });
+      });
+    });
+
+    render();
+  </script>
+</Layout>

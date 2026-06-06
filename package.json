@@ -1,0 +1,65 @@
+{
+  "name": "cvrns-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20 <21"
+  },
+  "scripts": {
+    "predev": "node scripts/check-encoding.mjs",
+    "dev": "astro dev",
+    "prestart": "node scripts/check-encoding.mjs",
+    "start": "astro dev",
+    "prebuild": "node scripts/check-encoding.mjs && node scripts/verify-copy.mjs",
+    "build": "astro build",
+    "validate:html": "html-validate dist/",
+    "validate:links": "linkinator dist --recurse --skip \"^(#|mailto:|javascript:)\"",
+    "validate:dist": "npm run validate:html && npm run validate:links",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "astro check",
+    "check:encoding": "node scripts/check-encoding.mjs",
+    "suggest-prompts": "node scripts/suggest-prompts.mjs",
+    "remind:manual": "node scripts/git-context.mjs",
+    "pretest": "node scripts/check-encoding.mjs",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,js,mjs,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": "prettier --write"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@axe-core/playwright": "^4.11.3",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
+    "axe-core": "^4.12.0",
+    "eslint": "^10.4.1",
+    "eslint-plugin-astro": "^1.7.0",
+    "globals": "^17.6.0",
+    "html-validate": "^11.5.2",
+    "husky": "^9.1.7",
+    "lighthouse": "^13.3.0",
+    "linkinator": "^7.6.1",
+    "lint-staged": "^13.3.0",
+    "playwright-lighthouse": "^4.0.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.60.1"
+  }
+}

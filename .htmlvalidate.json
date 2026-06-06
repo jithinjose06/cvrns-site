@@ -1,0 +1,17 @@
+{
+  "extends": ["html-validate:recommended"],
+  "elements": ["html5"],
+  "rules": {
+    "no-trailing-whitespace": "off",
+    "require-sri": "off",
+    "no-implicit-button-type": "off",
+    "no-inline-style": "off",
+    "attribute-allowed-values": "off",
+    "no-deprecated-attr": "off",
+    "void-style": "off",
+    "element-permitted-content": "warn",
+    "element-required-attributes": "warn",
+    "aria-label-misuse": "warn",
+    "prefer-native-element": "off"
+  }
+}

@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Media from '../components/Media.astro';
+import SpotifyEmbed from '../components/SpotifyEmbed.astro';
+---
+
+<Layout title="CVRNS — Hollow Light" page="home">
+  <!-- HERO (production: hard-coded monolith) -->
+  <header class="hero" data-hero="monolith">
+    <div class="hero__scrim"></div>
+    <div class="hero__inner">
+      <div class="hero__col">
+        <h1 class="hero__title reveal" data-d="1">CVRNS</h1>
+        <div class="actions reveal" data-d="3">
+          <a class="btn btn--solid btn--lg" href="/music">Listen <span class="ar">↗</span></a>
+          <a class="btn btn--lg" href="/store">Merch <span class="ar">↗</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><i></i> Scroll</div>
+  </header>
+
+  <!-- LATEST RELEASE -->
+  <section class="section release wrap" id="release">
+    <div class="release__grid">
+      <div class="release__art reveal">
+        <!-- TODO: drop HERE.AFTER cover art in /public/images/release-art.jpg -->
+        <Media alt="HERE.AFTER album artwork" label="Drop album artwork" />
+      </div>
+      <div class="release__body reveal" data-d="1">
+        <span class="kicker">EP · 2025</span>
+        <h2 class="display h-lg">HERE.AFTER</h2>
+        <p class="serifless-lead muted">Made to be played front to back.</p>
+        <SpotifyEmbed />
+        <div class="actions">
+          <a class="btn btn--solid" href="/music">Stream Now <span class="ar">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ABOUT -->
+  <section class="section wrap">
+    <div class="feature">
+      <div class="feature__media reveal">
+        <!-- TODO: drop band photo in /public/images/feat-1.jpg -->
+        <Media alt="CVRNS band photograph" label="Drop band photograph" />
+      </div>
+      <div class="feature__body reveal" data-d="1">
+        <span class="feature__index">(01) — The Band</span>
+        <h3 class="display h-md">The Band</h3>
+        <p class="serifless-lead muted">
+          Four shadows, one room. CVRNS is a melodic metalcore band that makes bangers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MERCH TEASER -->
+  <section class="section wrap" id="merch">
+    <div class="feature feature--rev feature--wide">
+      <div class="feature__media reveal">
+        <!-- TODO: drop merch / poster shot in /public/images/feat-2.jpg -->
+        <Media alt="CVRNS merch and poster" label="Drop merch / poster shot" />
+      </div>
+      <div class="feature__body reveal" data-d="1">
+        <span class="feature__index">(02) — Objects</span>
+        <h3 class="display h-md">Wear the<br />record</h3>
+        <p class="serifless-lead muted">
+          A limited run of garments and pressings designed alongside the album. Heavyweight cotton,
+          screen-printed by hand, numbered editions of 300.
+        </p>
+        <a class="btn" href="/store">Enter the Store <span class="ar">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER (mock — see TODO in Layout script) -->
+  <section class="section signup wrap" id="signup">
+    <div class="signup__inner">
+      <span class="kicker reveal">The Inner Circle</span>
+      <h2 class="display h-md reveal" data-d="1">Hear it first</h2>
+      <p class="serifless-lead muted reveal" data-d="2">
+        Unreleased demos, pre-sale codes, and the occasional letter from the road. No noise.
+      </p>
+      <form class="reveal" data-d="2">
+        <input type="email" placeholder="Email address" required aria-label="Email address" />
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </section>
+</Layout>

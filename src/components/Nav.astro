@@ -1,0 +1,52 @@
+---
+interface Props {
+  page: 'home' | 'music' | 'store';
+  cart?: boolean;
+}
+
+const { page, cart = false } = Astro.props;
+---
+
+<nav class="nav">
+  <a class="nav__brand" href="/" aria-label="CVRNS home">
+    <img src="/images/cvrns-logo.png" alt="CVRNS" />
+    <span class="nav__word">CVRNS</span>
+  </a>
+  <div class="nav__links">
+    <a href="/" aria-current={page === 'home' ? 'page' : undefined}>Home</a>
+    <a href="/music" aria-current={page === 'music' ? 'page' : undefined}>Music</a>
+    <a href="/store" aria-current={page === 'store' ? 'page' : undefined}>Store</a>
+    <a href="/#signup">Newsletter</a>
+    {
+      cart && (
+        <button type="button" class="nav__cart" aria-label="Open cart">
+          Cart{' '}
+          <span class="count" data-empty="true">
+            0
+          </span>
+        </button>
+      )
+    }
+  </div>
+  <button type="button" class="nav__burger" aria-label="Open menu"
+    ><span></span><span></span></button
+  >
+</nav>
+
+<div class="drawer">
+  <button type="button" class="drawer__close">Close</button>
+  <a href="/">Home</a>
+  <a href="/music">Music</a>
+  <a href="/store">Store</a>
+  <a href="/#signup">News</a>
+  {
+    cart && (
+      <button type="button" class="drawer__cart nav__cart" aria-label="Open cart">
+        Cart{' '}
+        <span class="count" data-empty="true">
+          0
+        </span>
+      </button>
+    )
+  }
+</div>
