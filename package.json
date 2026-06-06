@@ -40,7 +40,7 @@
     "*.{json,md}": "prettier --write"
   },
   "dependencies": {
-    "astro": "^4.16.18"
+    "astro": "^6.4.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
