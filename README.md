@@ -48,8 +48,8 @@ npm run suggest-prompts # suggest agent prompts for current diff
 - `.cursor/rules/coding-standards.mdc` keeps the AI agent aligned with the same
   conventions (DRY, event delegation, UTF-8-safe edits).
 
-> Note: `lint-staged` is pinned to 13.x for Git 2.31 compatibility. If you
-> upgrade Git to >= 2.32, you can move back to the latest `lint-staged`.
+> Note: `lint-staged` 17.x requires **Git >= 2.32**. Upgrade Git if pre-commit
+> hooks fail locally (`git --version` on Windows: install a current Git for Windows).
 
 Past bugs, flakes, and fixes are logged in [`docs/known-issues.md`](docs/known-issues.md).
 Reusable session prompts are in [`docs/agent-prompts.md`](docs/agent-prompts.md).
