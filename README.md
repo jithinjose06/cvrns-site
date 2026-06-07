@@ -146,8 +146,8 @@ Static output deploys to **Vercel** (Astro-native hosting, PR previews, root URL
 
 **Custom domain:** `https://cvrns.com` (see [`docs/vercel-setup.md`](docs/vercel-setup.md)).
 
-**Pre-launch password:** set `SITE_PASSWORD` in Vercel (Production). Root `middleware.ts` gates the site on Vercel; unset it to go public.
+**Pre-launch password:** set `SITE_PASSWORD` in Vercel (Production). Root `middleware.ts` shows a blurred private-preview gate; unset it to go public.
 
 ## Secrets
 
-Never commit API keys. Use `.env.local` (gitignored) locally; set the same vars in Vercel for production (`SITE`, optional `SITE_PASSWORD` / `SITE_AUTH_USER`).
+Never commit API keys. Use `.env.local` (gitignored) locally; set the same vars in Vercel for production (`SITE`, optional `SITE_PASSWORD`).
