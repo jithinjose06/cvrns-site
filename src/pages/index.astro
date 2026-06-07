@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Media from '../components/Media.astro';
 import SpotifyEmbed from '../components/SpotifyEmbed.astro';
+import { withBase } from '../lib/base';
 ---
 
 <Layout title="CVRNS — Hollow Light" page="home">
@@ -12,8 +13,10 @@ import SpotifyEmbed from '../components/SpotifyEmbed.astro';
       <div class="hero__col">
         <h1 class="hero__title reveal" data-d="1">CVRNS</h1>
         <div class="actions reveal" data-d="3">
-          <a class="btn btn--solid btn--lg" href="/music">Listen <span class="ar">↗</span></a>
-          <a class="btn btn--lg" href="/store">Merch <span class="ar">↗</span></a>
+          <a class="btn btn--solid btn--lg" href={withBase('/music')}
+            >Listen <span class="ar">↗</span></a
+          >
+          <a class="btn btn--lg" href={withBase('/store')}>Merch <span class="ar">↗</span></a>
         </div>
       </div>
     </div>
@@ -33,7 +36,9 @@ import SpotifyEmbed from '../components/SpotifyEmbed.astro';
         <p class="serifless-lead muted">Made to be played front to back.</p>
         <SpotifyEmbed />
         <div class="actions">
-          <a class="btn btn--solid" href="/music">Stream Now <span class="ar">↗</span></a>
+          <a class="btn btn--solid" href={withBase('/music')}
+            >Stream Now <span class="ar">↗</span></a
+          >
         </div>
       </div>
     </div>
@@ -72,7 +77,7 @@ import SpotifyEmbed from '../components/SpotifyEmbed.astro';
           A limited run of garments and pressings designed alongside the album. Heavyweight cotton,
           screen-printed by hand, numbered editions of 300.
         </p>
-        <a class="btn" href="/store">Enter the Store <span class="ar">↗</span></a>
+        <a class="btn" href={withBase('/store')}>Enter the Store <span class="ar">↗</span></a>
       </div>
     </div>
   </section>

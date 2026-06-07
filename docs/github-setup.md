@@ -104,6 +104,32 @@ Existing local clone — confirm remote:
 git remote set-url origin https://github.com/jithinjose06/cvrns-site.git
 ```
 
+## Deploy (GitHub Pages)
+
+Workflow: `.github/workflows/deploy.yml` — runs on every push to `master`.
+
+| Item                  | Value                                                               |
+| --------------------- | ------------------------------------------------------------------- |
+| Public URL            | https://jithinjose06.github.io/cvrns-site/                          |
+| Astro `site` / `base` | Set via `PAGES_SITE` and `PAGES_BASE` env vars in the workflow only |
+
+### One-time: enable Pages
+
+After the deploy workflow is merged to `master`:
+
+1. **Settings** → **Pages** → **Build and deployment** → Source: **GitHub Actions**
+2. Push to `master` (or re-run the Deploy workflow) if the first run happened before Pages was enabled
+
+CLI (optional):
+
+```bash
+gh api --method POST repos/jithinjose06/cvrns-site/pages -f build_type=workflow
+```
+
+### Custom domain
+
+Add the domain under Pages settings, then update `PAGES_SITE` in `deploy.yml` to `https://your.domain`.
+
 ## Historical note
 
 The repo was briefly under the `jjcvrns` organization during a Team plan trial, then transferred to `jithinjose06` and made public. Old org URLs may redirect for a time; use the personal URL above.

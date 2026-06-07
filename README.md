@@ -60,6 +60,8 @@ Run `npm run suggest-prompts` (or ask the agent) to get suggestions for your cur
 
 **Repository:** [github.com/jithinjose06/cvrns-site](https://github.com/jithinjose06/cvrns-site) (public)
 
+**Live site (GitHub Pages):** https://jithinjose06.github.io/cvrns-site/ — deploys automatically on merge to `master` (see [Deploy](#deploy)).
+
 `master` is **protected** — do not push to it directly. Open a PR from a feature branch; GitHub blocks merge until required CI checks pass.
 
 | Required check (must pass)    | Job                                                              |
@@ -128,6 +130,25 @@ These mock pieces are flagged with `// TODO` markers in the code:
 4. **Links** - placeholder `#` hrefs (Apple Music, Bandcamp, YouTube, socials, store policies) need real URLs.
 
 The **Spotify embed is real** (album `0cLwfhERSggSwKM7PwPqu6`) and the hero is hard-coded to the **monolith** layout, per the handoff spec.
+
+## Deploy
+
+Static output deploys to **GitHub Pages** via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) when `master` updates.
+
+| Item       | Value                                                                              |
+| ---------- | ---------------------------------------------------------------------------------- |
+| URL        | https://jithinjose06.github.io/cvrns-site/                                         |
+| Build      | `npm run build` with `PAGES_SITE` + `PAGES_BASE` (set only in the deploy workflow) |
+| Local / CI | `base: "/"` — tests and `npm run dev` unchanged                                    |
+
+**First-time setup** (one-time, after the deploy workflow is on `master`):
+
+1. Repo → **Settings** → **Pages**
+2. **Build and deployment** → Source: **GitHub Actions**
+
+Or enable via API once the workflow exists (see `docs/github-setup.md`).
+
+**Custom domain later:** add the domain under Pages settings and update `PAGES_SITE` in the deploy workflow + `astro.config.mjs` env.
 
 ## Secrets
 

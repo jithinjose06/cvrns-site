@@ -13,10 +13,13 @@ interface Props {
   eager?: boolean;
 }
 
+import { withBase } from '../lib/base';
+
 const { src = '/images/placeholder.svg', alt, label, eager = false } = Astro.props;
+const imgSrc = withBase(src);
 ---
 
 <div class="media">
-  <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  <img src={imgSrc} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
   {label && <span class="media__tag">{label}</span>}
 </div>
