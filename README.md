@@ -60,7 +60,7 @@ Run `npm run suggest-prompts` (or ask the agent) to get suggestions for your cur
 
 **Repository:** [github.com/jithinjose06/cvrns-site](https://github.com/jithinjose06/cvrns-site) (public)
 
-**Live site (GitHub Pages):** https://jithinjose06.github.io/cvrns-site/ — deploys automatically on merge to `master` (see [Deploy](#deploy)).
+**Live site (Vercel):** connect the repo once at [vercel.com/new](https://vercel.com/new) — then production deploys on every merge to `master` (see [Deploy](#deploy)).
 
 `master` is **protected** — do not push to it directly. Open a PR from a feature branch; GitHub blocks merge until required CI checks pass.
 
@@ -133,22 +133,18 @@ The **Spotify embed is real** (album `0cLwfhERSggSwKM7PwPqu6`) and the hero is h
 
 ## Deploy
 
-Static output deploys to **GitHub Pages** via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) when `master` updates.
+Static output deploys to **Vercel** (Astro-native hosting, PR previews, root URLs). Config: [`vercel.json`](vercel.json).
 
-| Item       | Value                                                                              |
-| ---------- | ---------------------------------------------------------------------------------- |
-| URL        | https://jithinjose06.github.io/cvrns-site/                                         |
-| Build      | `npm run build` with `PAGES_SITE` + `PAGES_BASE` (set only in the deploy workflow) |
-| Local / CI | `base: "/"` — tests and `npm run dev` unchanged                                    |
+| Item        | Value                                                    |
+| ----------- | -------------------------------------------------------- |
+| Host        | [Vercel](https://vercel.com) (GitHub integration)        |
+| Build       | `npm run build` → `dist/` (same as local)                |
+| Production  | Auto-deploy on merge to `master` after repo is connected |
+| PR previews | Unique `*.vercel.app` URL per pull request               |
 
-**First-time setup** (one-time, after the deploy workflow is on `master`):
+**One-time setup:** import `jithinjose06/cvrns-site` at [vercel.com/new](https://vercel.com/new). Step-by-step: [`docs/vercel-setup.md`](docs/vercel-setup.md).
 
-1. Repo → **Settings** → **Pages**
-2. **Build and deployment** → Source: **GitHub Actions**
-
-Or enable via API once the workflow exists (see `docs/github-setup.md`).
-
-**Custom domain later:** add the domain under Pages settings and update `PAGES_SITE` in the deploy workflow + `astro.config.mjs` env.
+**Custom domain later:** Vercel project → **Settings** → **Domains**; optional `SITE` env var for canonical URLs.
 
 ## Secrets
 

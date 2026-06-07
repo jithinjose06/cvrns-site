@@ -18,6 +18,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Vercel local project link (not committed)
+.vercel/
+
 # environment variables (never commit secrets)
 .env
 .env.local
