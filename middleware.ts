@@ -1,5 +1,3 @@
-import { defineMiddleware } from 'astro:middleware';
-
 const REALM = 'CVRNS';
 
 function unauthorized(): Response {
@@ -21,8 +19,8 @@ function timingSafeEqual(a: string, b: string): boolean {
   return result === 0;
 }
 
-function parseBasicAuth(header: string): { user: string; pass: string } | null {
-  if (!header.startsWith('Basic ')) return null;
+function parseBasicAuth(header: string | null): { user: string; pass: string } | null {
+  if (!header?.startsWith('Basic ')) return null;
   try {
     const decoded = atob(header.slice(6));
     const colon = decoded.indexOf(':');
@@ -33,14 +31,14 @@ function parseBasicAuth(header: string): { user: string; pass: string } | null {
   }
 }
 
-export const onRequest = defineMiddleware((context, next) => {
+export default function middleware(request: Request) {
   const password = process.env.SITE_PASSWORD;
   if (!password) {
-    return next();
+    return;
   }
 
   const expectedUser = process.env.SITE_AUTH_USER ?? 'cvrns';
-  const credentials = parseBasicAuth(context.request.headers.get('authorization') ?? '');
+  const credentials = parseBasicAuth(request.headers.get('authorization'));
   if (
     !credentials ||
     !timingSafeEqual(credentials.user, expectedUser) ||
@@ -48,6 +46,8 @@ export const onRequest = defineMiddleware((context, next) => {
   ) {
     return unauthorized();
   }
+}
 
-  return next();
-});
+export const config = {
+  matcher: ['/((?!_vercel).*)'],
+};
