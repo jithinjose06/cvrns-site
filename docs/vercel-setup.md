@@ -15,17 +15,14 @@ Production hosting is **Vercel** (first-class Astro support, root URLs, PR previ
    - **Node.js:** 22.x (from `.nvmrc`)
 5. Click **Deploy**
 
-| Variable         | Required   | Purpose                                                            |
-| ---------------- | ---------- | ------------------------------------------------------------------ |
-| `SITE`           | Production | Canonical URL, e.g. `https://cvrns.com`                            |
-| `SITE_PASSWORD`  | Optional   | When set, the whole site requires HTTP Basic Auth (Hobby-friendly) |
-| `SITE_AUTH_USER` | Optional   | Basic-auth username (default: `cvrns`)                             |
+| Variable        | Required   | Purpose                                                           |
+| --------------- | ---------- | ----------------------------------------------------------------- |
+| `SITE`          | Production | Canonical URL, e.g. `https://cvrns.com`                           |
+| `SITE_PASSWORD` | Optional   | Blurred private-preview gate; cookie unlocks the site for 30 days |
 
 ### Password gate (pre-launch)
 
-Set `SITE_PASSWORD` in Vercel → **Settings** → **Environment Variables** (Production). Visitors get a browser login prompt. **Remove the variable** (or clear its value) and redeploy when you go public.
-
-Optional: set `SITE_AUTH_USER` if you do not want the default username `cvrns`.
+Set `SITE_PASSWORD` in Vercel → **Settings** → **Environment Variables** (Production). Visitors see a blurred private-preview gate and enter the password once (cookie lasts 30 days). **Remove the variable** (or clear its value) and redeploy when you go public.
 
 ## After first deploy
 
