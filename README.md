@@ -40,8 +40,7 @@ npm run suggest-prompts # suggest agent prompts for current diff
 - **`validate:dist`** runs `html-validate` and `linkinator` on `dist/` (skips
   `#` placeholder links until launch URLs are wired).
 - **Dependabot** (`.github/dependabot.yml`) and **PR template** keep deps and
-  review checklists on track. See [`docs/github-setup.md`](docs/github-setup.md)
-  for branch protection and secret scanning after first push.
+  review checklists on track.
 - **Node 22** pinned via `.nvmrc` and `package.json` `engines` (required by `html-validate` v11).
 - **Pre-commit hook** (husky + lint-staged) auto-runs eslint `--fix`, prettier
   `--write`, and the encoding guard on staged files. CI re-runs all of these in
@@ -55,8 +54,34 @@ npm run suggest-prompts # suggest agent prompts for current diff
 Past bugs, flakes, and fixes are logged in [`docs/known-issues.md`](docs/known-issues.md).
 Reusable session prompts are in [`docs/agent-prompts.md`](docs/agent-prompts.md).
 Run `npm run suggest-prompts` (or ask the agent) to get suggestions for your current diff.
-`npm run remind:manual` prints context-based manual steps (baseline commit, GitHub remote,
-branch protection) when those still apply.
+`npm run remind:manual` prints context-based manual steps when they still apply.
+
+## GitHub & CI
+
+**Repository:** [github.com/jithinjose06/cvrns-site](https://github.com/jithinjose06/cvrns-site) (public)
+
+`master` is **protected** — do not push to it directly. Open a PR from a feature branch; GitHub blocks merge until required CI checks pass.
+
+| Required check (must pass)    | Job                                                              |
+| ----------------------------- | ---------------------------------------------------------------- |
+| `Lint, format & types`        | encoding, lint, format, typecheck, build, HTML + link validation |
+| `Build & cross-browser tests` | Playwright across Chromium, Firefox, WebKit, mobile profiles     |
+
+The **Lighthouse** job is informational only (`continue-on-error`) and is not required to merge.
+
+**Typical workflow:**
+
+```bash
+git checkout -b feat/my-change
+# edit, commit (pre-commit hook runs on staged files)
+git push -u origin feat/my-change
+gh pr create --fill   # or open PR on GitHub
+# merge after CI is green
+```
+
+Public repo benefits: **unlimited Actions minutes** on standard runners (no per-minute billing), **free branch protection**, and **secret scanning with push protection** (enabled — see [`docs/github-setup.md`](docs/github-setup.md)).
+
+CI runs via [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on every push and pull request.
 
 ## Testing
 
@@ -78,7 +103,7 @@ npx playwright test --update-snapshots    # refresh visual baselines after inten
 - **Visual** (`tests/visual`): full-page screenshot baselines per page x viewport in `tests/visual.spec.ts-snapshots/`. Chromium-only; baselines are platform-specific (committed as `-win32`) and are **skipped on CI** - run them locally.
 - **Performance** (`tests/perf`, `perf` project): Lighthouse budget per page (performance >= 85, accessibility = 100, best-practices >= 75, SEO >= 95). Runs Chromium over CDP. Best-practices is capped near 77 on Home/Music by the Spotify embed's third-party cookies.
 
-CI runs automatically via GitHub Actions (`.github/workflows/ci.yml`) on push/PR in two jobs: a required **cross-browser** job (encoding check + build + functional + a11y + keyboard + content across all engines) and an informational, non-blocking **Lighthouse** job. The HTML report is uploaded as an artifact.
+On pull requests, CI must pass before `master` can merge (see **GitHub & CI** above). The HTML Playwright report is uploaded as an Actions artifact when the test job runs.
 
 ## Project structure
 

@@ -1,49 +1,109 @@
-# GitHub setup (one-time, after first push)
+# GitHub setup
 
-The repo is ready for CI. Complete these steps on GitHub once a remote exists.
+Repository: **https://github.com/jithinjose06/cvrns-site** (public, default branch `master`)
 
-## 1. Push the repository
+One-time setup is complete. This doc describes what is configured and how to work with it day to day.
 
-```bash
-git remote add origin git@github.com:YOUR_ORG/cvrns-site.git
-git push -u origin main
-```
+## Current configuration
 
-Use `master` instead of `main` if that is your default branch name locally.
+| Item                        | Status                                 |
+| --------------------------- | -------------------------------------- |
+| Visibility                  | Public                                 |
+| Default branch              | `master`                               |
+| Branch protection           | Enabled on `master`                    |
+| CI workflow                 | `.github/workflows/ci.yml` (push + PR) |
+| Dependabot                  | `.github/dependabot.yml`               |
+| PR template                 | `.github/pull_request_template.md`     |
+| Secret scanning             | Enabled                                |
+| Push protection             | Enabled                                |
+| Dependabot security updates | Enabled                                |
 
-## 2. Branch protection on `main`
+### Branch protection on `master`
 
-Settings -> Branches -> Add rule for `main`:
+Configured at Settings → Branches → `master`:
 
-| Setting                               | Recommendation                                        |
+| Setting                               | Value                                                 |
 | ------------------------------------- | ----------------------------------------------------- |
-| Require a pull request before merging | On                                                    |
+| Require a pull request before merging | On (0 approvals — fine for solo work)                 |
 | Require status checks to pass         | On                                                    |
 | Required checks                       | `Lint, format & types`, `Build & cross-browser tests` |
 | Require branches to be up to date     | On                                                    |
-| Do not include administrators         | Optional                                              |
+| Allow force pushes                    | Off                                                   |
+| Allow deletions                       | Off                                                   |
 
-The Lighthouse job is informational (`continue-on-error`) -- do not require it.
+Do **not** require the Lighthouse job — it is informational (`continue-on-error` in CI).
 
-The `npm audit` step is informational until vulnerabilities are cleared.
+The `npm audit` step in the quality job is also informational (`continue-on-error`).
 
-## 3. Secret scanning
+## Day-to-day workflow
 
-Settings -> Code security and analysis:
+`master` rejects direct pushes. Use a branch and PR:
 
-- Enable **Secret scanning** (public repos: free).
-- Enable **Push protection** if available.
+```bash
+git checkout -b feat/short-description
+# make changes, commit (husky runs lint-staged + encoding on staged files)
+git push -u origin feat/short-description
+gh pr create --fill
+```
+
+Merge the PR on GitHub after both required checks are green. GitHub blocks merge if CI failed or is still running.
+
+To update your branch after `master` moved:
+
+```bash
+git fetch origin
+git rebase origin/master   # or merge origin/master
+git push
+```
+
+## CI jobs
+
+| Job                               | Required to merge? | What it runs                                                                |
+| --------------------------------- | ------------------ | --------------------------------------------------------------------------- |
+| Lint, format & types              | Yes                | encoding, lint, format, typecheck, build, `validate:html`, `validate:links` |
+| Build & cross-browser tests       | Yes                | Playwright (desktop, mobile, Firefox, WebKit, mobile-safari)                |
+| Lighthouse budget (informational) | No                 | Perf budget via Playwright Lighthouse                                       |
+
+View runs: https://github.com/jithinjose06/cvrns-site/actions
+
+## Public repo benefits
+
+- **Actions:** unlimited minutes on GitHub-hosted standard runners (no per-minute charge for normal CI).
+- **Branch protection:** free on public repos (enforced on `master` as above).
+- **Secret scanning:** available free under Settings → Code security and analysis.
+
+## Secret scanning + push protection
+
+Enabled under Settings → **Code security and analysis**:
+
+- **Secret scanning** — scans commits for known secret patterns
+- **Push protection** — blocks pushes that contain detected secrets
+- **Dependabot security updates** — opens PRs for vulnerable dependencies
 
 Never commit `.env` or API keys. `.gitignore` already excludes `.env*`.
 
-## 4. Dependabot
+## Dependabot
 
-`.github/dependabot.yml` is included. After push, enable Dependabot alerts under
-Settings -> Code security if not already on.
+Dependabot version PRs are configured in `.github/dependabot.yml`. Review weekly; **do not merge** until required CI checks pass.
 
-Review Dependabot PRs weekly; CI must pass before merge.
+Major bumps (e.g. Astro 4 → 6) should be deliberate migrations, not auto-merged Dependabot PRs.
 
-## 5. First baseline commit
+Dependabot security alerts: Settings → Code security → Dependabot alerts (enable if not already on).
 
-If you have not committed yet, create one baseline commit so husky lint-staged
-backup/stash behavior is fully active. See `docs/agent-prompts.md`.
+## Cloning / remotes
+
+```bash
+git clone https://github.com/jithinjose06/cvrns-site.git
+cd cvrns-site
+npm install
+```
+
+Existing local clone — confirm remote:
+
+```bash
+git remote set-url origin https://github.com/jithinjose06/cvrns-site.git
+```
+
+## Historical note
+
+The repo was briefly under the `jjcvrns` organization during a Team plan trial, then transferred to `jithinjose06` and made public. Old org URLs may redirect for a time; use the personal URL above.

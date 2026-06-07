@@ -186,22 +186,22 @@ normalize replacement strings.
 
 ## 8. Prevention stack (current)
 
-| Layer                                | What it catches                           |
-| ------------------------------------ | ----------------------------------------- |
-| `.editorconfig` + `.gitattributes`   | Wrong encoding / line endings             |
-| `check:encoding`                     | Mojibake before tests or commit           |
-| `verify-copy.mjs` (`prebuild`)       | Deleted/corrupted glyphs (arrow, middot)  |
-| Prettier                             | Format drift; safe UTF-8 writes for astro |
-| ESLint                               | Dead code, silent catches, var usage      |
-| `astro check`                        | Type errors in app source                 |
-| `validate:html` / `validate:links`   | Bad built HTML; broken real URLs in dist  |
-| Pre-commit hook                      | Lint/format/encoding on staged files      |
-| CI `quality` job                     | Hooks + build + dist validation + audit   |
-| Playwright suite                     | Runtime, a11y, keyboard, content          |
-| Dependabot + PR template             | Stale deps; human review checklist        |
-| `.cursor/rules/coding-standards.mdc` | Agent conventions + test expectations     |
-| `docs/github-setup.md`               | Branch protection (manual, after push)    |
-| This file                            | Historical context for regressions        |
+| Layer                                | What it catches                              |
+| ------------------------------------ | -------------------------------------------- |
+| `.editorconfig` + `.gitattributes`   | Wrong encoding / line endings                |
+| `check:encoding`                     | Mojibake before tests or commit              |
+| `verify-copy.mjs` (`prebuild`)       | Deleted/corrupted glyphs (arrow, middot)     |
+| Prettier                             | Format drift; safe UTF-8 writes for astro    |
+| ESLint                               | Dead code, silent catches, var usage         |
+| `astro check`                        | Type errors in app source                    |
+| `validate:html` / `validate:links`   | Bad built HTML; broken real URLs in dist     |
+| Pre-commit hook                      | Lint/format/encoding on staged files         |
+| CI `quality` job                     | Hooks + build + dist validation + audit      |
+| Playwright suite                     | Runtime, a11y, keyboard, content             |
+| Dependabot + PR template             | Stale deps; human review checklist           |
+| `.cursor/rules/coding-standards.mdc` | Agent conventions + test expectations        |
+| `docs/github-setup.md`               | Public repo, protected `master`, PR workflow |
+| This file                            | Historical context for regressions           |
 
 ### html-validate config filename (v11)
 

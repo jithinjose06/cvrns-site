@@ -13,7 +13,7 @@ The agent will assess the conversation and git diff, then suggest only what appl
 
 ```bash
 npm run suggest-prompts   # prompts + manual GitHub reminders for current git state
-npm run remind:manual    # manual steps only (branch protection, secrets, etc.)
+npm run remind:manual    # PR workflow on master, optional secret scanning, etc.
 ```
 
 The agent also surfaces manual steps when you mention commit, push, PR, or deploy.
@@ -22,11 +22,13 @@ The agent also surfaces manual steps when you mention commit, push, PR, or deplo
 
 ## Every push (routine)
 
+`master` is protected — push a feature branch and open a PR (see README **GitHub & CI**).
+
 ```
 Pre-push: run quality gates (check:encoding, lint, format:check, typecheck, build,
 validate:dist), run targeted Playwright tests (smoke, store, keyboard), quick diff
 review for scope creep and DRY violations. Tell me what blocks push. Do not commit
-unless I say.
+unless I say. Remind me if I am on master — use a feature branch instead.
 ```
 
 ---
@@ -79,13 +81,17 @@ if duplicated. Run gates when done.
 
 ## Commit and push (only when you are ready)
 
+`master` requires a PR — never push directly to it.
+
 ```
-Create a commit for [scope]. Message should explain why. Run pre-commit hooks.
-Do not push unless I also ask.
+Create a commit on branch [branch-name] for [scope]. Message should explain why.
+Run pre-commit hooks. Do not push unless I also ask.
 ```
 
 ```
-Push to [remote/branch] and open a PR. Summarize changes and test plan.
+Push branch [branch-name] to origin and open a PR into master. Summarize changes
+and test plan. Confirm required CI checks (Lint, format & types; Build & cross-browser
+tests) before merge.
 ```
 
 ---

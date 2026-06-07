@@ -57,9 +57,9 @@ a meaningful task:
 4. Skip prompts for checks that already ran successfully in this session unless
    the user is about to push.
 
-## Manual GitHub steps (contextual reminder)
-Automation cannot set branch protection or secret scanning. **Remind the user
-when context calls for it** -- do not wait for them to remember `github-setup.md`.
+## GitHub workflow (contextual reminder)
+Repo is **public** at `jithinjose06/cvrns-site`; **`master` is protected** (PR +
+required CI). See `docs/github-setup.md` and README **GitHub & CI**.
 
 **Trigger reminders when the user mentions:** commit, push, PR, GitHub, remote,
 deploy, "what's next", or finishing a large milestone.
@@ -68,8 +68,8 @@ deploy, "what's next", or finishing a large milestone.
 - `git rev-list --count HEAD` -- 0 means baseline commit needed first.
 - `git remote` empty -- add origin before push.
 - branch has no upstream -- first `git push -u` needed.
-- remote exists -- one-time browser steps: branch protection, secret scanning,
-  Dependabot alerts (`docs/github-setup.md` sections 2-4).
+- on `master` with remote -- use a feature branch + PR (direct push blocked).
+- secret scanning + push protection are enabled (`docs/github-setup.md`).
 
 **Format:** short bullet list under a "Manual steps" heading; link `docs/github-setup.md`.
 If the user confirms a step is done, do not repeat it in the same conversation
