@@ -1,5 +1,6 @@
 ---
 import { spotifyAlbumUrl } from '../data/spotify';
+import { withBase } from '../lib/base';
 
 interface Props {
   variant?: 'home' | 'music' | 'store';
@@ -16,15 +17,15 @@ const SPOTIFY_URL = spotifyAlbumUrl();
   <div class="wrap">
     <div class="footer__top">
       <div class="footer__brand">
-        <img src="/images/cvrns-logo.png" alt="CVRNS" />
+        <img src={withBase('/images/cvrns-logo.png')} alt="CVRNS" />
         <p>CVRNS — alternative rock. Currently somewhere on the road.</p>
       </div>
       <div class="footer__cols">
         <div class="footer__col">
           <h2>Explore</h2>
-          <a href="/">Home</a>
-          <a href="/music">Music</a>
-          <a href="/store">Store</a>
+          <a href={withBase('/')}>Home</a>
+          <a href={withBase('/music')}>Music</a>
+          <a href={withBase('/store')}>Store</a>
         </div>
 
         {

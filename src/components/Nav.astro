@@ -4,19 +4,21 @@ interface Props {
   cart?: boolean;
 }
 
+import { withBase } from '../lib/base';
+
 const { page, cart = false } = Astro.props;
 ---
 
 <nav class="nav">
-  <a class="nav__brand" href="/" aria-label="CVRNS home">
-    <img src="/images/cvrns-logo.png" alt="CVRNS" />
+  <a class="nav__brand" href={withBase('/')} aria-label="CVRNS home">
+    <img src={withBase('/images/cvrns-logo.png')} alt="CVRNS" />
     <span class="nav__word">CVRNS</span>
   </a>
   <div class="nav__links">
-    <a href="/" aria-current={page === 'home' ? 'page' : undefined}>Home</a>
-    <a href="/music" aria-current={page === 'music' ? 'page' : undefined}>Music</a>
-    <a href="/store" aria-current={page === 'store' ? 'page' : undefined}>Store</a>
-    <a href="/#signup">Newsletter</a>
+    <a href={withBase('/')} aria-current={page === 'home' ? 'page' : undefined}>Home</a>
+    <a href={withBase('/music')} aria-current={page === 'music' ? 'page' : undefined}>Music</a>
+    <a href={withBase('/store')} aria-current={page === 'store' ? 'page' : undefined}>Store</a>
+    <a href={withBase('/#signup')}>Newsletter</a>
     {
       cart && (
         <button type="button" class="nav__cart" aria-label="Open cart">
@@ -35,10 +37,10 @@ const { page, cart = false } = Astro.props;
 
 <div class="drawer">
   <button type="button" class="drawer__close">Close</button>
-  <a href="/">Home</a>
-  <a href="/music">Music</a>
-  <a href="/store">Store</a>
-  <a href="/#signup">News</a>
+  <a href={withBase('/')}>Home</a>
+  <a href={withBase('/music')}>Music</a>
+  <a href={withBase('/store')}>Store</a>
+  <a href={withBase('/#signup')}>News</a>
   {
     cart && (
       <button type="button" class="drawer__cart nav__cart" aria-label="Open cart">
