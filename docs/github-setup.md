@@ -104,31 +104,17 @@ Existing local clone — confirm remote:
 git remote set-url origin https://github.com/jithinjose06/cvrns-site.git
 ```
 
-## Deploy (GitHub Pages)
+## Deploy (Vercel)
 
-Workflow: `.github/workflows/deploy.yml` — runs on every push to `master`.
+Production hosting is on **Vercel**, not GitHub Pages. See [`docs/vercel-setup.md`](vercel-setup.md) for the one-time GitHub import.
 
-| Item                  | Value                                                               |
-| --------------------- | ------------------------------------------------------------------- |
-| Public URL            | https://jithinjose06.github.io/cvrns-site/                          |
-| Astro `site` / `base` | Set via `PAGES_SITE` and `PAGES_BASE` env vars in the workflow only |
+| Item       | Value                                     |
+| ---------- | ----------------------------------------- |
+| Config     | `vercel.json` at repo root                |
+| Production | Auto on merge to `master` (after connect) |
+| Previews   | Per-PR `*.vercel.app` URLs                |
 
-### One-time: enable Pages
-
-After the deploy workflow is merged to `master`:
-
-1. **Settings** → **Pages** → **Build and deployment** → Source: **GitHub Actions**
-2. Push to `master` (or re-run the Deploy workflow) if the first run happened before Pages was enabled
-
-CLI (optional):
-
-```bash
-gh api --method POST repos/jithinjose06/cvrns-site/pages -f build_type=workflow
-```
-
-### Custom domain
-
-Add the domain under Pages settings, then update `PAGES_SITE` in `deploy.yml` to `https://your.domain`.
+Disable legacy GitHub Pages under repo **Settings** → **Pages** if it was enabled earlier.
 
 ## Historical note
 

@@ -1,5 +1,5 @@
 /**
- * Resolve a site-relative path against Astro BASE_URL (e.g. /cvrns-site/ on GitHub Pages).
+ * Resolve a site-relative path against Astro BASE_URL ("/" on Vercel; supports subpath if base changes).
  */
 export function withBase(path: string): string {
   const base = import.meta.env.BASE_URL;
