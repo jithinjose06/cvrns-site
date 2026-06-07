@@ -99,19 +99,17 @@ export function getManualReminders(ctx) {
     });
   }
 
-  // One-time GitHub settings -- remind until remote exists and branch has been pushed.
-  // Cannot detect branch protection via git; agent should ask if user completed these.
-  if (ctx.remotes.length > 0) {
+  if (ctx.remotes.length > 0 && ctx.branch === 'master') {
     reminders.push({
-      phase: 'github-settings',
-      title: 'One-time GitHub settings (manual in browser)',
-      why: 'Not automatable from this repo -- required for real enforcement.',
+      phase: 'protected-branch',
+      title: 'master is protected — use a feature branch + PR',
+      why: 'Direct pushes to master are blocked; merge via PR after CI passes.',
       steps: [
-        'Branch protection on main: require PR + status checks (quality + test jobs)',
-        'Enable secret scanning + push protection',
-        'Confirm Dependabot alerts are on (dependabot.yml is already in repo)',
+        'git checkout -b feat/short-description',
+        'Commit, push branch, open PR (gh pr create --fill)',
+        'Required checks: Lint, format & types; Build & cross-browser tests',
       ],
-      doc: SETUP_DOC + ' sections 2-4',
+      doc: SETUP_DOC,
     });
   }
 
