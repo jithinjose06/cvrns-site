@@ -15,7 +15,17 @@ Production hosting is **Vercel** (first-class Astro support, root URLs, PR previ
    - **Node.js:** 22.x (from `.nvmrc`)
 5. Click **Deploy**
 
-No environment variables are required for the static site today.
+| Variable         | Required   | Purpose                                                            |
+| ---------------- | ---------- | ------------------------------------------------------------------ |
+| `SITE`           | Production | Canonical URL, e.g. `https://cvrns.com`                            |
+| `SITE_PASSWORD`  | Optional   | When set, the whole site requires HTTP Basic Auth (Hobby-friendly) |
+| `SITE_AUTH_USER` | Optional   | Basic-auth username (default: `cvrns`)                             |
+
+### Password gate (pre-launch)
+
+Set `SITE_PASSWORD` in Vercel → **Settings** → **Environment Variables** (Production). Visitors get a browser login prompt. **Remove the variable** (or clear its value) and redeploy when you go public.
+
+Optional: set `SITE_AUTH_USER` if you do not want the default username `cvrns`.
 
 ## After first deploy
 

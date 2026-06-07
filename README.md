@@ -144,8 +144,10 @@ Static output deploys to **Vercel** (Astro-native hosting, PR previews, root URL
 
 **One-time setup:** import `jithinjose06/cvrns-site` at [vercel.com/new](https://vercel.com/new). Step-by-step: [`docs/vercel-setup.md`](docs/vercel-setup.md).
 
-**Custom domain later:** Vercel project → **Settings** → **Domains**; optional `SITE` env var for canonical URLs.
+**Custom domain:** `https://cvrns.com` (see [`docs/vercel-setup.md`](docs/vercel-setup.md)).
+
+**Pre-launch password:** set `SITE_PASSWORD` in Vercel (Production). Edge middleware in `src/middleware.ts` gates the site; unset it to go public.
 
 ## Secrets
 
-Never commit API keys. Use `.env.local` (gitignored) locally; set the same vars in your host (Vercel/Netlify) for production.
+Never commit API keys. Use `.env.local` (gitignored) locally; set the same vars in Vercel for production (`SITE`, optional `SITE_PASSWORD` / `SITE_AUTH_USER`).

@@ -40,6 +40,7 @@
     "*.{json,md}": "prettier --write"
   },
   "dependencies": {
+    "@astrojs/vercel": "^10.0.8",
     "astro": "^6.4.4"
   },
   "devDependencies": {
