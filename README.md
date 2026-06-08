@@ -126,7 +126,7 @@ These mock pieces are flagged with `// TODO` markers in the code:
 
 1. **Store checkout** (`src/pages/store.astro`) - cart UI/filter work and persist to `localStorage`; the **Checkout** button is mocked. Wire to **Shopify Storefront API** or **Stripe Checkout**.
 2. **Newsletter** (`src/layouts/Layout.astro`) - the form intercepts submit but does not post anywhere. Connect to **Mailchimp / Klaviyo / Beehiiv**.
-3. **Photography** - every `<Media>` uses `public/images/placeholder.svg`. Drop real images into `public/images/` and pass them via the `src` prop (slot ids: `release-art`, `feat-1`, `feat-2`, `m-art-1`, `p-vinyl`, `p-tee`, `p-hoodie`, `p-poster`, `p-cap`, `p-long`).
+3. **Photography** - Home uses `public/images/band.jpg` and `public/images/merch.jpg`. Still placeholder elsewhere (album art, store products): drop files in `public/images/` and pass `src` on `<Media>`.
 4. **Links** - placeholder `#` hrefs (Apple Music, Bandcamp, YouTube, socials, store policies) need real URLs.
 
 The **Spotify embed is real** (album `0cLwfhERSggSwKM7PwPqu6`) and the hero is hard-coded to the **monolith** layout, per the handoff spec.
